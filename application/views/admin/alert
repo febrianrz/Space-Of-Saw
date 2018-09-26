@@ -1,0 +1,2 @@
+echo "<script>alert('berhasil');</script>";
+redirect
