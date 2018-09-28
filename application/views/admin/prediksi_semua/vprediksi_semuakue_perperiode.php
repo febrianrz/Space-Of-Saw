@@ -126,10 +126,10 @@
                                                             <tr>
                                                                 <td class="text-center"><?=$no;?></td>
                                                                 <td class="text-left"><?=$cake->nama_produk;?></td>
-                                                                <td class="text-center"><?=$periodeDicari;?></td>
+                                                                <td class="text-center"><?=$prediksiItem->periode;?></td>
                                                                 <td class="text-center"><?=$end+1;?></td>
                                                                 <td class="text-center"><?=number_format($prediksiItem->prediksi,2);?></td>
-                                                                <td class="text-center"><?=number_format($prediksiItem->totalGalat/$totalPeriode*100,5);?></td>
+                                                                <td class="text-center"><?=$prediksiItem->mape;?></td>
                                                                 <td><a class="btn btn-success btn-xs" href="<?=base_url('PrediksiSemuaKue/detail?id_produk='.$cake->id_produk."&start=$start_date&end=$end_date&typeInterval=$typeInterval");?>">Lihat Rincian</a></td>
                                                             </tr>
                                                             <?php $no++;?>

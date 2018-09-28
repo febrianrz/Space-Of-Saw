@@ -7,12 +7,14 @@ class Rumus
 
     public function Meanx($jumlah_periode,$jumlah_x)
     {
+        if($jumlah_periode==0) return $jumlah_x/1;
     	$ratax = $jumlah_x/$jumlah_periode;
     	return $ratax;
     }
 	
 	public function Meany($jumlah_periode,$jumlah_y)
     {
+        if($jumlah_periode==0) return $jumlah_y/1;
     	$ratay = $jumlah_y/$jumlah_periode;
     	return $ratay;
     }

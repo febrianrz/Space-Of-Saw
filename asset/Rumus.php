@@ -10,6 +10,7 @@ class Rumus {
     }
 	
 	public function Meany($sumperiode,$sumnilai){
+        // die();
     	$ratay = $sumnilai/$sumperiode;
     	return $ratay;
     }
