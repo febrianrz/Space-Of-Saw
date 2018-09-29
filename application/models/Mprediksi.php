@@ -531,6 +531,7 @@ class Mprediksi extends CI_Model
 	public function getTanggalAwalByPeriode($periode){
 		$start_date = $this->getFirstDate();
 		if($periode != 1){		
+			$periode -= 1;
 			$periode = $periode * 7;
 			// $periode -= 1;
 			return date("Y-m-d",strtotime($start_date." +".$periode." days"));	
@@ -561,6 +562,7 @@ class Mprediksi extends CI_Model
 	public function getSingleItemPrediksi($id_produk, $start_date, $end_date, $no, $totalPeriode, $typeInterval){
 
 		$newTotalPeriode = $this->getTotalPeriodeWithTransactionExists($id_produk, $start_date, $end_date, $totalPeriode, $typeInterval);
+		// $newTotalPeriode = 10;
 		// echo $newTotalPeriode;die();
 		$totalY = $this->Mprediksi->getTotalPenjualanPeriode($id_produk,$start_date, $end_date);
 		// echo $totalY;die();
@@ -589,20 +591,22 @@ class Mprediksi extends CI_Model
         $x2 = $x*$x;
         $xy = $x*$y;
 		$prediksi = $a + ($b * ($newTotalPeriode+1)); 
+		// echo "$a + ($b * ($newTotalPeriode+1))";die();
 		$error = $y - $prediksi;
 		$error = $error < 0 ? $error * -1 : $error;
 		$errorKuadrat = $error * $error;
 		$y = $y==0?1:$y;
 		$galat = $error / $y;
-		$totalGalat = $this->getTotalGalat($id_produk, $newTotalPeriode, $start_date, $typeInterval, $a, $b);
-
-		$mape = number_format($totalGalat/$x*100,4);
+		$totalGalat = $this->getTotalGalat($id_produk, $totalPeriode, $start_date, $typeInterval, $a, $b);
+		// echo $x;die();
+		// $mape = number_format($totalGalat/$newTotalPeriode*100,4);
+		$mape = $totalGalat / $newTotalPeriode * 100;
 		$data = (object) [
 			'tanggal'	=> $start_date,
 			'periode'	=> $newTotalPeriode,
 			'demand'	=> $y,
 			'prediksi'	=> $prediksi,
-			'mape'		=> number_format($mape,2),
+			'mape'		=> number_format($mape,4),
 			'nilai_n'	=> $totalPeriode,
 			'total_y'	=> $totalY,
 			'total_x'	=> $totalX,
@@ -641,13 +645,14 @@ class Mprediksi extends CI_Model
 		// echo $typeInterval;die();
 		// $totalPeriode += 3;
 		// echo $totalPeriode;die();
+		
 		for($i=0;$i<$totalPeriode;$i++){
 			$current_date = $start_date;
 			if($typeInterval == 'weeks'){
-				$current_end_date = date('Y-m-d',strtotime($current_date." +1 week"));
+				$current_end_date = date('Y-m-d',strtotime($current_date." +6 days"));
 				$cek = $this->db->get_where('transaksi',['id_produk'=>$id_produk,'tanggal_transaksi >='=>$current_date,'tanggal_transaksi <='=>$current_end_date])->num_rows();	
 				// echo $start_date." - ".$current_end_date." $cek<br/>";
-				$start_date = date('Y-m-d', strtotime($start_date." +1 week"));
+				$start_date = date('Y-m-d', strtotime($start_date." +6 days"));
 				$start_date = date('Y-m-d', strtotime($start_date." +1 day"));
 			} else {
 				$cek = $this->db->get_where('transaksi',['id_produk'=>$id_produk,'tanggal_transaksi'=>$current_date])->num_rows();
@@ -747,6 +752,7 @@ class Mprediksi extends CI_Model
 		}
 		
 		$maxPeriode = $totalPeriode;
+		// echo $maxPeriode;die();
 
 		if($this->input->get('start') && $this->input->get('end')){
 			// echo $this->input->get('end');die();
@@ -755,8 +761,8 @@ class Mprediksi extends CI_Model
 		}
 		// var_dump($maxPeriode);die();
 		$tmpI = 1;
-		for($i=0; $i <=$maxPeriode; $i++){
-			if($i != 0){
+		for($i=1; $i <=$maxPeriode; $i++){
+			if($i != 1){
 				$tmp_start = date('Y-m-d',strtotime($tmp_end." +1 day"));
 				if($type == 'weeks'){
 					$tmp_end =  date('Y-m-d',strtotime($tmp_start." +6 days"));
@@ -782,7 +788,7 @@ class Mprediksi extends CI_Model
 	        $errorKuadrat = $error * $error;
 	        if($y != 0){
 	        	$tmpI++;
-				$galat = number_format($error / $y,4);
+				$galat = $error / $y;
 		        $totalGalat += $galat;
 		        // echo $tmp_start." - ".$tmp_end." - ";
 		        // echo $galat ."<br/>";

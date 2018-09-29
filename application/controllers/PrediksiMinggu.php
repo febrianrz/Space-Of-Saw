@@ -217,7 +217,7 @@ class PrediksiMinggu extends CI_Controller {
 
 	public function index(){
 		$data['typeInterval']	= "weeks"; //days, weeks
-		$data['start_date'] 	= $this->input->get('start')?$this->Mprediksi->getTanggalAwalByPeriode($this->input->get('start')-1):$this->Mprediksi->getFirstDate();
+		$data['start_date'] 	= $this->input->get('start')?$this->Mprediksi->getTanggalAwalByPeriode($this->input->get('start')):$this->Mprediksi->getFirstDate();
 		$data['end_date'] 		= $this->input->get('end')?$this->Mprediksi->getTanggalAkhirByPeriode($this->input->get('end')):$this->Mprediksi->getLastDate();
 		$data['start']			= ($this->input->get('start')!=null?$this->input->get('start'):1);	
 		$data['maxPeriode']		= $this->Mprediksi->getTotalPeriode($this->Mprediksi->getFirstDate(), $this->Mprediksi->getLastDate(),$data['typeInterval']);
